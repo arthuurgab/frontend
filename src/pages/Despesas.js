@@ -7,7 +7,7 @@ const Despesas = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/despesas/");
+        const response = await fetch("http://127.0.0.1:8000/api/all/");
         if (!response.ok) {
           throw new Error("Erro ao carregar os dados");
         }
@@ -23,14 +23,14 @@ const Despesas = () => {
 
   return (
     <div>
-      <header>
+      <header className="text-blue-500">
         {error ? (
           <p style={{ color: "red" }}>Erro: {error}</p>
         ) : (
           despesas.map((despesa) => (
             <h1 key={despesa.id}>
-              {despesa.nome} - R$ {despesa.valor},00 {despesa.tipo}{" "}
-              {despesa.prioridade} {despesa.data}
+              {despesa.nome} - R$ {despesa.valor},00 {despesa.tipo} -{" "}
+              {despesa.prioridade} - {despesa.data}
             </h1>
           ))
         )}
