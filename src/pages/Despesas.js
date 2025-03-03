@@ -22,20 +22,38 @@ const Despesas = () => {
   }, []);
 
   return (
-    <div>
-      <header className="text-blue-500">
+    <table className="container mx-auto bg-slate-500 text-white border border-gray-300">
+      <thead className="bg-gray-700 text-white">
+        <tr>
+          <th className="p-2 border">Nome</th>
+          <th className="p-2 border">Valor</th>
+          <th className="p-2 border">Paga</th>
+          <th className="p-2 border">Data</th>
+          <th className="p-2 border">Tipo</th>
+          <th className="p-2 border">Prioridade</th>
+        </tr>
+      </thead>
+      <tbody>
         {error ? (
-          <p style={{ color: "red" }}>Erro: {error}</p>
+          <tr>
+            <td colSpan="6" className="text-center text-red-500 p-4">
+              Erro: {error}
+            </td>
+          </tr>
         ) : (
           despesas.map((despesa) => (
-            <h1 key={despesa.id}>
-              {despesa.nome} - R$ {despesa.valor},00 {despesa.tipo} -{" "}
-              {despesa.prioridade} - {despesa.data}
-            </h1>
+            <tr key={despesa.id} className="border-b border-gray-400">
+              <td className="p-2 border">{despesa.nome}</td>
+              <td className="p-2 border">{despesa.valor}</td>
+              <td className="p-2 border">{despesa.paga ? "Sim" : "Não"}</td>
+              <td className="p-2 border">{despesa.data}</td>
+              <td className="p-2 border">{despesa.tipo}</td>
+              <td className="p-2 border">{despesa.prioridade}</td>
+            </tr>
           ))
         )}
-      </header>
-    </div>
+      </tbody>
+    </table>
   );
 };
 
