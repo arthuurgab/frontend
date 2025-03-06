@@ -1,30 +1,13 @@
 import { useEffect, useState } from "react";
+import Modal from "./modais/criarDespesaModal";
 
 const Despesas = () => {
-  const [tipoDespesa, setTipoDespesa] = useState([]);
-  const [tipoPrioridade, setTipoPrioridade] = useState([]);
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState([]);
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    const pago = event.target.checked;
-    setInput((values) => ({ ...values, [name]: value, pago }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8000/despesa/create/");
-      const data = await response.json();
-      setDespesas(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -43,129 +26,17 @@ const Despesas = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    const loadAuxiliar = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/auxiliares/tipo-despesa/all/"
-        );
-        if (!response.ok) {
-          throw new Error("Erro ao carregar os dados");
-        }
-        const data = await response.json();
-        setTipoDespesa(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    loadAuxiliar(); // Aqui chamamos a função corretamente
-  }, []);
-
-  useEffect(() => {
-    const loadAuxiliar = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/auxiliares/tipo-prioridade/all/"
-        );
-        if (!response.ok) {
-          throw new Error("Erro ao carregar os dados");
-        }
-        const data = await response.json();
-        setTipoPrioridade(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    loadAuxiliar(); // Aqui chamamos a função corretamente
-  }, []);
-
   return (
     <div className="w-screen flex justify-center p-6">
       <div className="row p-2">
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={openModal}
           className="mb-4 pg-2 p-2 bg-blue-500 text-white rounded"
         >
           Adicionar
         </button>
+        <Modal isOpen={isModalOpen} closeModal={closeModal} />
       </div>
-      {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 max-w-sm w-full transform transition-all scale-95">
-            <h2 className="text-xl font-bold mb-4">Título do Modal</h2>
-            <div className="text-gray-600">
-              <form onSubmit={handleSubmit}>
-                <label>
-                  {" "}
-                  Nome da despesa:
-                  <input
-                    type="text"
-                    name="nome"
-                    value={input.nome || ""}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-lg p-2 w-full"
-                  />
-                </label>
-                <label>
-                  {" "}
-                  Valor da despesa:
-                  <input
-                    type="number"
-                    name="valor"
-                    value={input.valor || ""}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-lg p-2 w-full"
-                  />
-                </label>
-                <label>
-                  {" "}
-                  Pago:
-                  <input
-                    type="checkbox"
-                    name="pago"
-                    value={input.pago || ""}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-lg p-2 w-full"
-                  />
-                </label>
-                <label>
-                  {" "}
-                  Tipo:
-                  <select className="border border-gray-300 rounded-lg p-2 w-full">
-                    {tipoDespesa.map((td) => (
-                      <option value={td.id}>{td.nome}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  {" "}
-                  Tipo:
-                  <select className="border border-gray-300 rounded-lg p-2 w-full">
-                    {tipoPrioridade.map((tp) => (
-                      <option value={tp.id}>{tp.nome}</option>
-                    ))}
-                  </select>
-                </label>
-                <input
-                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition cursor-pointer"
-                  type="submit"
-                />
-              </form>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <table className=" bg-slate-500 text-white border border-gray-300">
         <thead className="bg-gray-700 text-white">
           <tr>
