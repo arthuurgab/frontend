@@ -13,9 +13,8 @@ const Layout = () => {
           </li>
         </ul>
       </nav>
-      <div className="w-screen flex justify-center p-6">
-        <Outlet />
-      </div>
+
+      <Outlet />
     </>
   );
 };
