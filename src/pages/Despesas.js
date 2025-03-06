@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 const Despesas = () => {
-  const [auxiliar, setAuxiliar] = useState([]);
+  const [tipoDespesa, setTipoDespesa] = useState([]);
+  const [tipoPrioridade, setTipoPrioridade] = useState([]);
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +41,44 @@ const Despesas = () => {
     };
 
     loadData();
+  }, []);
+
+  useEffect(() => {
+    const loadAuxiliar = async () => {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/auxiliares/tipo-despesa/all/"
+        );
+        if (!response.ok) {
+          throw new Error("Erro ao carregar os dados");
+        }
+        const data = await response.json();
+        setTipoDespesa(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    loadAuxiliar(); // Aqui chamamos a função corretamente
+  }, []);
+
+  useEffect(() => {
+    const loadAuxiliar = async () => {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/auxiliares/tipo-prioridade/all/"
+        );
+        if (!response.ok) {
+          throw new Error("Erro ao carregar os dados");
+        }
+        const data = await response.json();
+        setTipoPrioridade(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    loadAuxiliar(); // Aqui chamamos a função corretamente
   }, []);
 
   return (
@@ -95,8 +134,8 @@ const Despesas = () => {
                   {" "}
                   Tipo:
                   <select className="border border-gray-300 rounded-lg p-2 w-full">
-                    {despesas.map((despesa) => (
-                      <option value={despesa.tipo}>{despesa.tipo}</option>
+                    {tipoDespesa.map((td) => (
+                      <option value={td.id}>{td.nome}</option>
                     ))}
                   </select>
                 </label>
@@ -104,10 +143,8 @@ const Despesas = () => {
                   {" "}
                   Tipo:
                   <select className="border border-gray-300 rounded-lg p-2 w-full">
-                    {despesas.map((despesa) => (
-                      <option value={despesa.prioridade}>
-                        {despesa.prioridade}
-                      </option>
+                    {tipoPrioridade.map((tp) => (
+                      <option value={tp.id}>{tp.nome}</option>
                     ))}
                   </select>
                 </label>
