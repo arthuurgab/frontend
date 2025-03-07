@@ -11,6 +11,12 @@ const Layout = () => {
           <li>
             <Link to="/despesas">Despesas</Link>
           </li>
+          <li>
+            <Link to="/tipo-despesas">Tipo Despesa</Link>
+          </li>
+          <li>
+            <Link to="/tipo-prioridade">Tipo Prioridade</Link>
+          </li>
         </ul>
       </nav>
 
