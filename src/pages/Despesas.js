@@ -4,7 +4,6 @@ import Modal from "./modais/criarDespesaModal";
 const Despesas = () => {
   const [despesas, setDespesas] = useState([]);
   const [error, setError] = useState(null);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -24,6 +23,24 @@ const Despesas = () => {
     };
     loadData();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/despesa/${id}/delete/`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir a despesa");
+      }
+      setDespesas(despesas.filter((despesa) => despesa.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="w-screen flex justify-center p-6">
@@ -45,6 +62,7 @@ const Despesas = () => {
             <th className="p-2 border">Data</th>
             <th className="p-2 border">Tipo</th>
             <th className="p-2 border">Prioridade</th>
+            <th className="p-2 border">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -63,6 +81,17 @@ const Despesas = () => {
                 <td className="p-2 border">{despesa.data}</td>
                 <td className="p-2 border">{despesa.tipo}</td>
                 <td className="p-2 border">{despesa.prioridade}</td>
+                <td className="p-2 border">
+                  <button className="bg-blue-500 text-white p-2 rounded mr-2">
+                    Editar
+                  </button>
+                  <button
+                    className="bg-red-500 text-white p-2 rounded"
+                    onClick={() => handleDelete(despesa.id)} // Passando o ID correto
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
             ))
           )}
