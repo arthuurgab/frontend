@@ -26,6 +26,7 @@ const Modal = ({ isOpen, setIsOpen, closeModal }) => {
         alert("Tipo de despesa criado com sucesso!", data);
         setInput({ nome: "" });
         setIsOpen(false);
+        window.location.reload();
       } else {
         console.error("Erro ao criar despesa");
       }

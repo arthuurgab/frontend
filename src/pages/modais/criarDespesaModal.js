@@ -1,35 +1,34 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const Modal = ({ isOpen, setIsOpen, closeModal }) => {
+const Modal = ({ isOpen, setIsModalOpen, closeModal }) => {
   const [tipoDespesa, setTipoDespesa] = useState([]);
   const [tipoPrioridade, setTipoPrioridade] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState({
     nome: "",
     valor: "",
-    pago: false,
-    tipoDespesaId: "",
-    tipoPrioridadeId: "",
+    paga: false,
+    tipo: "",
+    prioridade: "",
+    data: "",
   });
 
+  // Carregar os tipos de despesa e prioridade apenas uma vez
   useEffect(() => {
-    if (isOpen) {
-      // Carregar os tipos de despesa
-      fetch("http://127.0.0.1:8000/auxiliares/tipo-despesa/all/")
-        .then((response) => response.json())
-        .then((data) => setTipoDespesa(data))
-        .catch((error) =>
-          console.error("Erro ao carregar tipos de despesa:", error)
-        );
+    fetch("http://127.0.0.1:8000/auxiliares/tipo-despesa/all/")
+      .then((response) => response.json())
+      .then((data) => setTipoDespesa(data))
+      .catch((error) =>
+        console.error("Erro ao carregar tipos de despesa:", error)
+      );
 
-      // Carregar os tipos de prioridade
-      fetch("http://127.0.0.1:8000/auxiliares/tipo-prioridade/all/")
-        .then((response) => response.json())
-        .then((data) => setTipoPrioridade(data))
-        .catch((error) =>
-          console.error("Erro ao carregar tipos de prioridade:", error)
-        );
-    }
-  }, [isOpen]); // Recarregar os dados quando o modal for aberto
+    fetch("http://127.0.0.1:8000/auxiliares/tipo-prioridade/all/")
+      .then((response) => response.json())
+      .then((data) => setTipoPrioridade(data))
+      .catch((error) =>
+        console.error("Erro ao carregar tipos de prioridade:", error)
+      );
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -41,24 +40,35 @@ const Modal = ({ isOpen, setIsOpen, closeModal }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
+    const payload = {
+      ...input,
+      valor: parseFloat(input.valor), // Converte para número
+      paga: Boolean(input.paga), // Garante que seja booleano
+    };
+
     try {
       const response = await fetch("http://127.0.0.1:8000/despesa/create/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         console.log("Despesa criada:", data);
-        setIsOpen(false);
+        closeModal();
+        window.location.reload();
       } else {
-        console.error("Erro ao criar despesa");
+        const errorText = await response.text();
+        console.error("Erro ao criar despesa:", errorText);
       }
     } catch (err) {
       console.error("Erro ao enviar os dados:", err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,36 +80,32 @@ const Modal = ({ isOpen, setIsOpen, closeModal }) => {
         <h2 className="text-xl font-bold mb-6">Cadastrar Despesa</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block mb-2">
-              Nome da despesa:
-              <input
-                type="text"
-                name="nome"
-                value={input.nome || ""}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </label>
+            <label className="block mb-2">Nome da despesa:</label>
+            <input
+              type="text"
+              name="nome"
+              value={input.nome}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            />
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2">
-              Valor da despesa:
-              <input
-                type="number"
-                name="valor"
-                value={input.valor || ""}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </label>
+            <label className="block mb-2">Valor da despesa:</label>
+            <input
+              type="number"
+              name="valor"
+              value={input.valor}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            />
           </div>
 
           <div className="mb-4 flex items-center">
             <input
               type="checkbox"
-              name="pago"
-              checked={input.pago}
+              name="paga"
+              checked={input.paga}
               onChange={handleChange}
               className="border border-gray-300 rounded-lg p-2 mx-2"
             />
@@ -107,49 +113,62 @@ const Modal = ({ isOpen, setIsOpen, closeModal }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2">
-              Tipo de Despesa:
-              <select
-                name="tipoDespesaId"
-                value={input.tipoDespesaId || ""}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              >
-                <option value="">Selecione</option>
-                {tipoDespesa.map((td) => (
-                  <option key={td.id} value={td.id}>
-                    {td.nome}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <label className="block mb-2">Tipo de Despesa:</label>
+            <select
+              name="tipo"
+              value={input.tipo}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            >
+              <option value="">Selecione</option>
+              {tipoDespesa.map((td) => (
+                <option key={td.id} value={td.id}>
+                  {td.nome}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2">
-              Tipo de Prioridade:
-              <select
-                name="tipoPrioridadeId"
-                value={input.tipoPrioridadeId || ""}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              >
-                <option value="">Selecione</option>
-                {tipoPrioridade.map((tp) => (
-                  <option key={tp.id} value={tp.id}>
-                    {tp.nome}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <label className="block mb-2">Tipo de Prioridade:</label>
+            <select
+              name="prioridade"
+              value={input.prioridade}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            >
+              <option value="">Selecione</option>
+              {tipoPrioridade.map((tp) => (
+                <option key={tp.id} value={tp.id}>
+                  {tp.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-2">Data da despesa:</label>
+            <input
+              type="date"
+              name="data"
+              value={input.data}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            />
           </div>
 
           <div className="mb-6">
-            <input
+            <button
               type="submit"
-              value="Cadastrar"
-              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition cursor-pointer w-full"
-            />
+              disabled={loading}
+              className={`px-4 py-2 rounded-lg w-full transition cursor-pointer ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-500 text-white hover:bg-orange-600"
+              }`}
+            >
+              {loading ? "Cadastrando..." : "Cadastrar"}
+            </button>
           </div>
         </form>
 
