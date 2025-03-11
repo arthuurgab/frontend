@@ -44,8 +44,8 @@ const Modal = ({ isOpen, setIsModalOpen, closeModal }) => {
 
     const payload = {
       ...input,
-      valor: parseFloat(input.valor), // Converte para número
-      paga: Boolean(input.paga), // Garante que seja booleano
+      valor: parseFloat(input.valor),
+      paga: Boolean(input.paga),
     };
 
     try {
@@ -164,7 +164,7 @@ const Modal = ({ isOpen, setIsModalOpen, closeModal }) => {
               className={`px-4 py-2 rounded-lg w-full transition cursor-pointer ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-orange-500 text-white hover:bg-orange-600"
+                  : "bg-[#A05A2C] text-white hover:bg-orange-600"
               }`}
             >
               {loading ? "Cadastrando..." : "Cadastrar"}

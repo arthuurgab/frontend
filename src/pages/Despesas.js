@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "./modais/criarDespesaModal";
+import "boxicons/css/boxicons.min.css";
 
 const Despesas = () => {
   const [despesas, setDespesas] = useState([]);
@@ -43,60 +44,115 @@ const Despesas = () => {
   };
 
   return (
-    <div className="w-screen flex justify-center p-6">
-      <div className="row p-2">
-        <button
-          onClick={openModal}
-          className="mb-4 pg-2 p-2 bg-blue-500 text-white rounded"
-        >
-          Adicionar
-        </button>
+    <div className="container-fluid mx-auto p-6">
+      <div className="mb-6 space-y-6">
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center space-x-4">
+            <i className="bx bx-menu text-4xl cursor-pointer"></i>
+            <i className="bx bxs-calendar text-4xl cursor-pointer"></i>
+            <div class="relative w-full">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <i class="bx bx-search-alt "></i>
+              </div>
+              <input
+                type="text"
+                id="simple-search"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  "
+                placeholder="Pesquisar Despesa..."
+                required
+              />
+            </div>
+          </div>
+          <button
+            onClick={openModal}
+            className="px-4 py-2 bg-[#A05A2C] text-white rounded flex items-center gap-2"
+          >
+            <i className="bx bx-plus"></i>
+            Add Nova Despesa
+          </button>
+        </div>
+
+        <div className="space-x-2 space-y-2">
+          <button>Todos |</button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Apenas Pagas
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Apenas Não Pagas
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Leves
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Médias
+          </button>
+          <br />
+          <button className="text-white">iodos|</button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Alta
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Muito Alta
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Vencidas
+          </button>
+          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+            Dentro do Prazo
+          </button>
+        </div>
         <Modal isOpen={isModalOpen} closeModal={closeModal} />
       </div>
-      <table className=" bg-slate-500 text-white border border-gray-300">
-        <thead className="bg-gray-700 text-white">
-          <tr>
-            <th className="p-2 border">Nome</th>
-            <th className="p-2 border">Valor</th>
-            <th className="p-2 border">Paga</th>
-            <th className="p-2 border">Data</th>
-            <th className="p-2 border">Tipo</th>
-            <th className="p-2 border">Prioridade</th>
-            <th className="p-2 border">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {error ? (
+
+      <div className="bg-[#EAD7C1] text-white rounded-lg overflow-hidden">
+        <table className="w-full border-collapse">
+          <thead className="bg-[#4B2E20] text-white">
             <tr>
-              <td colSpan="6" className="text-center text-red-500 p-4">
-                Erro: {error}
-              </td>
+              <th className="p-3">Nome</th>
+              <th className="p-3">Valor</th>
+              <th className="p-3">Paga</th>
+              <th className="p-3">Data</th>
+              <th className="p-3">Tipo</th>
+              <th className="p-3">Prioridade</th>
+              <th className="p-3">Ações</th>
             </tr>
-          ) : (
-            despesas.map((despesa) => (
-              <tr key={despesa.id} className="border-b border-gray-400">
-                <td className="p-2 border">{despesa.nome}</td>
-                <td className="p-2 border">{despesa.valor}</td>
-                <td className="p-2 border">{despesa.paga ? "Sim" : "Não"}</td>
-                <td className="p-2 border">{despesa.data}</td>
-                <td className="p-2 border">{despesa.tipo}</td>
-                <td className="p-2 border">{despesa.prioridade}</td>
-                <td className="p-2 border">
-                  <button className="bg-blue-500 text-white p-2 rounded mr-2">
-                    Editar
-                  </button>
-                  <button
-                    className="bg-red-500 text-white p-2 rounded"
-                    onClick={() => handleDelete(despesa.id)} // Passando o ID correto
-                  >
-                    Excluir
-                  </button>
+          </thead>
+          <tbody>
+            {error ? (
+              <tr>
+                <td colSpan="7" className="text-center text-red-500 p-4">
+                  Erro: {error}
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              despesas.map((despesa) => (
+                <tr
+                  key={despesa.id}
+                  className="text-[#A05A2C] font-semibold text-center cursor-pointer hover:bg-[#f2e0cc]"
+                >
+                  <td className="p-3">{despesa.nome}</td>
+                  <td className="p-3">R$ {despesa.valor}</td>
+                  <td className="p-3">{despesa.paga ? "Sim" : "Não"}</td>
+                  <td className="p-3">{despesa.data}</td>
+                  <td className="p-3">{despesa.tipo}</td>
+                  <td className="p-3">{despesa.prioridade}</td>
+                  <td className="p-3">
+                    <button className="bg-[#A05A2C] text-white p-2 rounded mr-2">
+                      Editar
+                    </button>
+                    <button
+                      className="bg-[#A05A2C] text-white p-2 rounded"
+                      onClick={() => handleDelete(despesa.id)}
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
