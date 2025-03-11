@@ -2,12 +2,76 @@ import { useEffect, useState } from "react";
 import Modal from "./modais/criarDespesaModal";
 import "boxicons/css/boxicons.min.css";
 
-const Despesas = () => {
-  const [despesas, setDespesas] = useState([]);
-  const [error, setError] = useState(null);
+const Filtros = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  return (
+    <div className="mb-6 space-y-6">
+      <div className="flex justify-between items-center w-full">
+        <div className="flex items-center space-x-4">
+          <i className="bx bx-menu text-4xl cursor-pointer"></i>
+          <i className="bx bxs-calendar text-4xl cursor-pointer"></i>
+          <div class="relative w-full">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <i class="bx bx-search-alt "></i>
+            </div>
+            <input
+              type="text"
+              id="simple-search"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  "
+              placeholder="Pesquisar Despesa..."
+              required
+            />
+          </div>
+        </div>
+        <button
+          onClick={openModal}
+          className="px-4 py-2 bg-[#A05A2C] text-white rounded flex items-center gap-2"
+        >
+          <i className="bx bx-plus"></i>
+          Add Nova Despesa
+        </button>
+      </div>
+
+      <div className="space-x-2 space-y-2">
+        <button>Todos |</button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Apenas Pagas
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Apenas Não Pagas
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Leves
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Médias
+        </button>
+        <br />
+        <button className="text-white">iodos|</button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Alta
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Muito Alta
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Vencidas
+        </button>
+        <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
+          Dentro do Prazo
+        </button>
+      </div>
+      <Modal isOpen={isModalOpen} closeModal={closeModal} />
+    </div>
+  );
+};
+
+const Despesas = () => {
+  const [despesas, setDespesas] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -45,65 +109,7 @@ const Despesas = () => {
 
   return (
     <div className="container-fluid mx-auto p-6">
-      <div className="mb-6 space-y-6">
-        <div className="flex justify-between items-center w-full">
-          <div className="flex items-center space-x-4">
-            <i className="bx bx-menu text-4xl cursor-pointer"></i>
-            <i className="bx bxs-calendar text-4xl cursor-pointer"></i>
-            <div class="relative w-full">
-              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <i class="bx bx-search-alt "></i>
-              </div>
-              <input
-                type="text"
-                id="simple-search"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  "
-                placeholder="Pesquisar Despesa..."
-                required
-              />
-            </div>
-          </div>
-          <button
-            onClick={openModal}
-            className="px-4 py-2 bg-[#A05A2C] text-white rounded flex items-center gap-2"
-          >
-            <i className="bx bx-plus"></i>
-            Add Nova Despesa
-          </button>
-        </div>
-
-        <div className="space-x-2 space-y-2">
-          <button>Todos |</button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Apenas Pagas
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Apenas Não Pagas
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Leves
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Médias
-          </button>
-          <br />
-          <button className="text-white">iodos|</button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Alta
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Muito Alta
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Vencidas
-          </button>
-          <button className="bg-[#A05A2C] text-white text-sm rounded px-3 py-1">
-            Dentro do Prazo
-          </button>
-        </div>
-        <Modal isOpen={isModalOpen} closeModal={closeModal} />
-      </div>
-
+      <div Filtros></div>
       <div className="bg-[#EAD7C1] text-white rounded-lg overflow-hidden">
         <table className="w-full border-collapse">
           <thead className="bg-[#4B2E20] text-white">
