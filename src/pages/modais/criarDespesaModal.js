@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Modal = ({ isOpen, setIsModalOpen, closeModal }) => {
+const Modal = ({ isOpen, closeModal }) => {
   const [tipoDespesa, setTipoDespesa] = useState([]);
   const [tipoPrioridade, setTipoPrioridade] = useState([]);
   const [loading, setLoading] = useState(false);
